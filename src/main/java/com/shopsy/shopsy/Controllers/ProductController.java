@@ -1,4 +1,4 @@
-package com.shopsy.shopsy.Controller;
+package com.shopsy.shopsy.Controllers;
 
 import java.util.List;
 
