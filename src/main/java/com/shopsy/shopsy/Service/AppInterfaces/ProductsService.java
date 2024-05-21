@@ -11,6 +11,6 @@ public interface ProductsService {
 
     ResponseEntity<List<ProductResponse>> addProducts(List<ProductRequest> productRequest);
 
-    ResponseEntity<ProductResponse> updateProduct(ProductRequest productRequest);
+    ResponseEntity<ProductResponse> updateProduct(Long productId,ProductRequest productRequest);
 
 }
