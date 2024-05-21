@@ -3,6 +3,7 @@ package com.shopsy.shopsy.Service.Implementation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +127,36 @@ public class ProductServiceImpl implements ProductsService {
                     .statusCode(500)
                     .responseMessage("An error occurred while updating the product: " + e.getMessage())
                     .build());
+        }
+    }
+
+    // Get all products
+    public ResponseEntity<List<ProductInfo>> getAllProducts() {
+        List<Products> products = productRepo.findAll();
+        List<ProductInfo> productInfos = products.stream()
+                .map(product -> modelMapper.map(product, ProductInfo.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(productInfos);
+    }
+
+    // Find product by ID
+    public ResponseEntity<Object> findProductById(Long productId) {
+        Optional<Products> product = productRepo.findById(productId);
+        if (product.isPresent()) {
+            ProductInfo productInfo = modelMapper.map(product.get(), ProductInfo.class);
+            return ResponseEntity.ok(productInfo);
+        } else {
+            return ResponseEntity.status(404).body("Product with ID '" + productId + "' not found.");
+        }
+    }
+
+    // Delete product by ID
+    public ResponseEntity<Object> deleteProductById(Long productId) {
+        if (productRepo.existsById(productId)) {
+            productRepo.deleteById(productId);
+            return ResponseEntity.ok("Product with ID '" + productId + "' deleted successfully.");
+        } else {
+            return ResponseEntity.status(404).body("Product with ID '" + productId + "' not found.");
         }
     }
 
